@@ -24,6 +24,7 @@ class Pomodoro:
         self.remaining -=1
         if self.remaining <= 0:
             self.switch_mode()
+            self.toggle()
 
     def switch_mode(self):
         if self.mode == "work":

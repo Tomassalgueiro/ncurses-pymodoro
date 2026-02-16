@@ -32,12 +32,14 @@ def main(stdscr):
             last_tick_time = current_time
         
         stdscr.erase()
+        try:
+            stdscr.addstr(0,0, f"Mode: {p1.mode}")
+            stdscr.addstr(1,0, f"Remaining: {format_time(p1.remaining)}")
+            stdscr.addstr(3,0, f"Space = Start/Pause")
+            stdscr.addstr(4,0, f"Q = Quit")
+        except curses.error:
+            pass
 
-        stdscr.addstr(0,0, f"Mode: {p1.mode}")
-        stdscr.addstr(1,0, f"Remaining: {format_time(p1.remaining)}")
-        stdscr.addstr(3,0, f"Space = Start/Pause")
-        stdscr.addstr(4,0, f"Q = Quit")
-        
         stdscr.refresh()
 
 
