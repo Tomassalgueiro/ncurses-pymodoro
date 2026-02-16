@@ -1,6 +1,8 @@
 import curses
 import time
 from curses import wrapper
+import sounddevice as sd
+import soundfile as sf
 
 import pomodoro
 import number_design
@@ -9,6 +11,7 @@ import number_design
 CLOCK_SIZE_Y = 5
 CLOCK_SIZE_X = 17
 
+data,fs = sf.read("alarm.wav", dtype='float32')
 
 def format_time(seconds):
     minute = seconds // 60
@@ -41,9 +44,11 @@ def main(stdscr):
 
         current_time = time.time()
         if current_time - last_tick_time >= 1.0:
-            p1.tick()
+            play_alarm = p1.tick()
             last_tick_time = current_time
-        
+        else:
+            play_alarm = False
+
         stdscr.erase()
         time_str = format_time(p1.remaining)
         
@@ -71,6 +76,9 @@ def main(stdscr):
             pass
 
         stdscr.refresh()
+        if play_alarm == True:
+            sd.play(data,fs)
+            sd.wait()
 
 
 wrapper(main)

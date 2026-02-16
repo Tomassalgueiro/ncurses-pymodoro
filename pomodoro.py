@@ -1,3 +1,8 @@
+import sounddevice as sd
+import soundfile as sf
+
+data,fs = sf.read("alarm.wav", dtype='float32')
+
 # POMODORO LOGIC FIRST
 class Pomodoro:
     # this implementation follows the method:
@@ -19,12 +24,14 @@ class Pomodoro:
 
     def tick(self):
         if not self.running:
-            return
+            return False
 
         self.remaining -=1
         if self.remaining <= 0:
             self.switch_mode()
-            self.toggle()
+            self.toggle() 
+            return True
+        return False
 
     def switch_mode(self):
         if self.mode == "Work":
