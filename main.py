@@ -1,7 +1,13 @@
 import curses
 import time
-import pomodoro
 from curses import wrapper
+
+import pomodoro
+import number_design
+
+CLOCK_POS_X = 5
+CLOCK_POS_Y = 4
+
 
 
 def format_time(seconds):
@@ -32,11 +38,24 @@ def main(stdscr):
             last_tick_time = current_time
         
         stdscr.erase()
+        time_str = format_time(p1.remaining)
         try:
-            stdscr.addstr(0,0, f"Mode: {p1.mode}")
-            stdscr.addstr(1,0, f"Remaining: {format_time(p1.remaining)}")
-            stdscr.addstr(3,0, f"Space = Start/Pause")
-            stdscr.addstr(4,0, f"Q = Quit")
+            stdscr.addstr(0,0, f"Mode: {p1.mode}") 
+            stdscr.addstr(2,0, f"Space = Start/Pause")
+            stdscr.addstr(3,0, f"Q = Quit")
+            
+            current_x = CLOCK_POS_X
+            for char in time_str:
+                if char == ":":
+                    stdscr.addstr(CLOCK_POS_Y + 1, current_x, "o")
+                    stdscr.addstr(CLOCK_POS_Y + 3, current_x, "o")
+                    current_x += 2
+                else:
+                    pattern = number_design.num_dict[int(char)]
+                    for i, bit in enumerate(pattern):
+                        if bit:
+                            stdscr.addstr(CLOCK_POS_Y + (i//3), current_x + (i % 3), "█")
+                    current_x += 4
         except curses.error:
             pass
 
