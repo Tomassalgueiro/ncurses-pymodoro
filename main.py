@@ -37,6 +37,21 @@ else:
         config_val = [int(line.strip()) for line in config.readlines()]        
 
 
+# define the 3 possible colorschemes
+curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)
+curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_BLACK)
+
+def get_text_color(mode):
+    match mode:
+        # this will output red
+        case "Work":
+            return 1
+        case "Small Break":
+            return 2
+        case "Big Break":
+            return 3
+
 def format_time(seconds):
     minute = seconds // 60
     sec = seconds % 60
@@ -66,9 +81,13 @@ def main(stdscr):
             p1.toggle()
         elif key == ord('t') and not p1.running:
             p1.switch_mode()
+        # implement helper window if the program is not running
+        # this will call another window and pressing backspace will go back
+        # elif key == ord('h') and not p1.running: 
         elif key == curses.KEY_RESIZE:
             curses.update_lines_cols()
             stdscr.clear()
+
 
         current_time = time.time()
         if current_time - last_tick_time >= 1.0:
@@ -91,6 +110,7 @@ def main(stdscr):
             current_x = screen_size_x // 2 - CLOCK_SIZE_X // 2  
             for char in time_str:
                 if char == ":":
+                    #stdscr.addstr(screen_size_y // 2 - 1, current_x, "█", curses.color_pair(get_co)
                     stdscr.addstr(screen_size_y // 2 - 1, current_x, "█")
                     stdscr.addstr(screen_size_y // 2 + 1, current_x, "█")
                     current_x += 2
