@@ -10,7 +10,7 @@ class Pomodoro:
         self.time_small_break = time_small_break
         self.time_big_break = time_big_break
         self.count = 0
-        self.mode = "work"
+        self.mode = "Work"
         self.running = False
         self.remaining = time_session
 
@@ -27,16 +27,16 @@ class Pomodoro:
             self.toggle()
 
     def switch_mode(self):
-        if self.mode == "work":
+        if self.mode == "Work":
             if self.count == self.small_break:
-                self.mode = "big_break"
+                self.mode = "Big Break"
                 self.remaining = self.time_big_break 
                 self.count = 0
             else:
-                self.mode = "small_break"
+                self.mode = "Small Break"
                 self.remaining = self.time_small_break 
                 self.count += 1
         else:
-            self.mode = "work"
+            self.mode = "Work"
             self.remaining =  self.time_session
 
