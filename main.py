@@ -3,6 +3,7 @@ import time
 from curses import wrapper
 import sounddevice as sd
 import soundfile as sf
+from pathlib import Path
 
 import pomodoro
 import number_design
@@ -11,7 +12,30 @@ import number_design
 CLOCK_SIZE_Y = 5
 CLOCK_SIZE_X = 17
 
+# identify the audio file
+# to change it swap alarm.wav in the config 
 data,fs = sf.read("alarm.wav", dtype='float32')
+
+# finds the directory 
+directory = Path.home()/".config"/"ncurses_pymodoro"
+file = directory/"config.txt"
+
+# make sure the file
+directory.mkdir(parents=True, exist_ok=True)
+
+# create file if it doesn't exist
+if not file.exists():
+    with open(file, "w") as config:
+        config.write("3\n")
+        config.write("1\n")
+        config.write("1500\n")
+        config.write("300\n")
+        config.write("1200\n")
+    config_val = [3,1,1500,300,1200]
+else:
+    with open(file, "r") as config:
+        config_val = [int(line.strip()) for line in config.readlines()]        
+
 
 def format_time(seconds):
     minute = seconds // 60
@@ -20,13 +44,14 @@ def format_time(seconds):
 
 def main(stdscr):
 
-
     curses.curs_set(0)
     stdscr.timeout(100)
     
     # create pomodoro object (check pomodoro.py for more info on parameters)
-    p1 = pomodoro.Pomodoro(3,1,5,3,12)
-
+    # hardcoded version
+    #p1 = pomodoro.Pomodoro(3,1,1500,300,1200)
+    # insert .config version in here    
+    p1 = pomodoro.Pomodoro(config_val[0],config_val[1],config_val[2],config_val[3],config_val[4])
     last_tick_time = time.time()
 
     while True:
@@ -41,6 +66,9 @@ def main(stdscr):
             p1.toggle()
         elif key == ord('t') and not p1.running:
             p1.switch_mode()
+        elif key == curses.KEY_RESIZE:
+            curses.update_lines_cols()
+            stdscr.clear()
 
         current_time = time.time()
         if current_time - last_tick_time >= 1.0:
@@ -49,14 +77,16 @@ def main(stdscr):
         else:
             play_alarm = False
 
-        stdscr.erase()
+        stdscr.clear()
         time_str = format_time(p1.remaining)
         
         # try block to avoid crashes in case the terminal is too small
         try:
-            stdscr.addstr(screen_size_y // 2 + 7,screen_size_x // 2 - 17 // 2, f"Mode: {p1.mode}") 
-            stdscr.addstr(screen_size_y // 2 + 8,screen_size_x // 2 - 17 // 2, f"Space = Start/Pause")
-            stdscr.addstr(screen_size_y // 2 + 9,screen_size_x // 2 - 17 // 2, f"Q = Quit")
+            stdscr.addstr(screen_size_y // 2 + 6,screen_size_x // 2 - 17 // 2, f"Mode: {p1.mode}") 
+            stdscr.addstr(screen_size_y // 2 + 7,screen_size_x // 2 - 17 // 2, f"Count: {p1.count}") 
+            stdscr.addstr(screen_size_y // 2 + 8,screen_size_x // 2 - 17 // 2, f"Cycles: {p1.cycles}") 
+            stdscr.addstr(screen_size_y // 2 + 9,screen_size_x // 2 - 17 // 2, f"Space = Start/Pause")
+            stdscr.addstr(screen_size_y // 2 + 10,screen_size_x // 2 - 17 // 2, f"Q = Quit")
             
             current_x = screen_size_x // 2 - CLOCK_SIZE_X // 2  
             for char in time_str:
@@ -68,7 +98,7 @@ def main(stdscr):
                     pattern = number_design.num_dict[int(char)]
                     for i, bit in enumerate(pattern):
                         if bit:
-                            stdscr.addstr(screen_size_y // 2 - 2 + (i//3), current_x + (i % 3), "█")
+                            stdscr.addstr((screen_size_y // 2 - 2 + (i//3)), current_x + (i % 3), "█")
                     current_x += 4
 
         # might add a messsage saying "terminal size too small", not important right now
@@ -79,6 +109,5 @@ def main(stdscr):
         if play_alarm == True:
             sd.play(data,fs)
             sd.wait()
-
 
 wrapper(main)
