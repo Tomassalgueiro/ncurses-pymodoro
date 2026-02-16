@@ -10,4 +10,5 @@ This is a small project in which i implement a pomodoro timer and draw it on the
 - [ ] Add more controls to the timer
 - [ ] Change the way the numbers look/add more colors
 - [ ] Fix the bug, where if you resize the terminal it doesn't readjust
-
+- [ ] Change the config file to json format
+- [ ] Create Helper page when the program is paused that 
