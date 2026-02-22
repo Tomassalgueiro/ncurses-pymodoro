@@ -37,10 +37,6 @@ else:
         config_val = [int(line.strip()) for line in config.readlines()]        
 
 
-# define the 3 possible colorschemes
-curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)
-curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
 def get_text_color(mode):
     match mode:
@@ -61,6 +57,12 @@ def main(stdscr):
 
     curses.curs_set(0)
     stdscr.timeout(100)
+    curses.start_color()
+    
+    # define the 3 possible colorschemes
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_BLUE, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_BLACK)
     
     # create pomodoro object (check pomodoro.py for more info on parameters)
     # hardcoded version
@@ -96,34 +98,33 @@ def main(stdscr):
         else:
             play_alarm = False
 
-        stdscr.clear()
+        stdscr.erase()
         time_str = format_time(p1.remaining)
         
         # try block to avoid crashes in case the terminal is too small
         try:
-            stdscr.addstr(screen_size_y // 2 + 6,screen_size_x // 2 - 17 // 2, f"Mode: {p1.mode}") 
-            stdscr.addstr(screen_size_y // 2 + 7,screen_size_x // 2 - 17 // 2, f"Count: {p1.count}") 
-            stdscr.addstr(screen_size_y // 2 + 8,screen_size_x // 2 - 17 // 2, f"Cycles: {p1.cycles}") 
-            stdscr.addstr(screen_size_y // 2 + 9,screen_size_x // 2 - 17 // 2, f"Space = Start/Pause")
-            stdscr.addstr(screen_size_y // 2 + 10,screen_size_x // 2 - 17 // 2, f"Q = Quit")
+            stdscr.addstr(screen_size_y // 3 + 6,screen_size_x // 2 - 17 // 2, f"Mode: {p1.mode}") 
+            stdscr.addstr(screen_size_y // 3 + 7,screen_size_x // 2 - 17 // 2, f"Count: {p1.count}") 
+            stdscr.addstr(screen_size_y // 3 + 8,screen_size_x // 2 - 17 // 2, f"Cycles: {p1.cycles}") 
+            stdscr.addstr(screen_size_y // 3 + 9,screen_size_x // 2 - 17 // 2, f"Space = Start/Pause")
+            stdscr.addstr(screen_size_y // 3 + 10,screen_size_x // 2 - 17 // 2, f"Q = Quit")
             
             current_x = screen_size_x // 2 - CLOCK_SIZE_X // 2  
             for char in time_str:
                 if char == ":":
-                    #stdscr.addstr(screen_size_y // 2 - 1, current_x, "█", curses.color_pair(get_co)
-                    stdscr.addstr(screen_size_y // 2 - 1, current_x, "█")
-                    stdscr.addstr(screen_size_y // 2 + 1, current_x, "█")
+                    stdscr.addstr(screen_size_y // 3 - 1, current_x, "█", curses.color_pair(get_text_color(p1.mode)))
+                    stdscr.addstr(screen_size_y // 3 + 1, current_x, "█", curses.color_pair(get_text_color(p1.mode)))
                     current_x += 2
                 else:
                     pattern = number_design.num_dict[int(char)]
                     for i, bit in enumerate(pattern):
                         if bit:
-                            stdscr.addstr((screen_size_y // 2 - 2 + (i//3)), current_x + (i % 3), "█")
+                            stdscr.addstr((screen_size_y // 3 - 2 + (i//3)), current_x + (i % 3), "█", curses.color_pair(get_text_color(p1.mode)))
                     current_x += 4
 
         # might add a messsage saying "terminal size too small", not important right now
         except curses.error:
-            pass
+            stdscr.addstr(5,5, f"Screen Size Too small")
 
         stdscr.refresh()
         if play_alarm == True:
