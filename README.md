@@ -2,6 +2,11 @@
 
 This is a small project in which i implement a pomodoro timer and draw it on the terminal using the curses (ncurses for C users) library.
 
+### Dependencies you might need
+
+- portaudio
+- portaudio-devel
+
 ### Todo
 
 - [x] Keyboard Control to control the timer
