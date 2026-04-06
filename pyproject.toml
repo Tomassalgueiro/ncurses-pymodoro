@@ -1,0 +1,13 @@
+[project]
+name = "ncurses-pymodoro"
+version = "0.1.0"
+description = "Pomodoro timer in a cli using ncurses"
+authors = [{ name="guinhas" }]
+dependencies = [
+    "numpy>=2.4.2",
+    "sounddevice>=0.5.5",
+    "soundfile>=0.13.1"
+]
+
+[project.scripts]
+pymodoro = "ncurses_pymodoro.main:main"
