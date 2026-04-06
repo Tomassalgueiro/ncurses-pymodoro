@@ -4,9 +4,10 @@ from curses import wrapper
 import sounddevice as sd
 import soundfile as sf
 from pathlib import Path
+import os
 
-import pomodoro
-import number_design
+from . import pomodoro
+from . import number_design
 
 # the clock is 5 units tall and 17 wide
 CLOCK_SIZE_Y = 5
@@ -14,7 +15,9 @@ CLOCK_SIZE_X = 17
 
 # identify the audio file
 # to change it swap alarm.wav in the config 
-data,fs = sf.read("alarm.wav", dtype='float32')
+file_path = os.path.join(os.path.dirname(__file__), "alarm.wav")
+
+data, fs = sf.read(file_path, dtype='float32')
 
 # finds the directory 
 directory = Path.home()/".config"/"ncurses_pymodoro"
