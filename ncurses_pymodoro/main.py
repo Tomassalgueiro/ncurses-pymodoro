@@ -3,6 +3,7 @@ import time
 from curses import wrapper
 import sounddevice as sd
 import soundfile as sf
+import sounddevice as sd
 from pathlib import Path
 import os
 
@@ -16,7 +17,6 @@ CLOCK_SIZE_X = 17
 # identify the audio file
 # to change it swap alarm.wav in the config 
 file_path = os.path.join(os.path.dirname(__file__), "alarm.wav")
-
 data, fs = sf.read(file_path, dtype='float32')
 
 # finds the directory 

@@ -1,7 +1,4 @@
-import sounddevice as sd
 import soundfile as sf
-
-data,fs = sf.read("alarm.wav", dtype='float32')
 
 # POMODORO LOGIC FIRST
 class Pomodoro:

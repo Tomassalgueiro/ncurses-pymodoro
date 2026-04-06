@@ -11,3 +11,6 @@ dependencies = [
 
 [project.scripts]
 pymodoro = "ncurses_pymodoro.main:main"
+
+[tool.flit.sdist]
+include = ["ncurses_pymodoro/alarm.wav"]
