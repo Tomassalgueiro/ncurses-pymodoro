@@ -6,8 +6,8 @@ import soundfile as sf
 import sounddevice as sd
 from pathlib import Path
 
-from . import pomodoro
-from . import number_design
+import pomodoro
+import number_design
 
 # the clock is 5 units tall and 17 wide
 CLOCK_SIZE_Y = 5
