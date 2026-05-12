@@ -17,7 +17,7 @@ CLOCK_SIZE_X = 17
 # to change it swap alarm.wav in the config 
 from importlib import resources
 
-with resources.path("ncurses_pymodoro", "alarm.wav") as file_path:
+with resources.path("assets", "alarm.wav") as file_path:
     data, fs = sf.read(file_path, dtype='float32')
 
 # finds the directory 
